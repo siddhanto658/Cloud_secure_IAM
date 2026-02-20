@@ -6,7 +6,18 @@ This repository contains the infrastructure-as-code and documentation for a secu
 
 This project intentionally omits AI/ML components to focus on the critical, underlying security architecture.
 
-## 2. Core Objectives
+## 2. Project Status & Development Plan
+
+**Current Phase:** Initial Project Planning Phase
+
+This project follows a 5-stage development plan:
+1.  **Planning:** Initial scope definition, architecture design, and repository setup (Current).
+2.  **Requirements & Analysis:** Finalizing IAM policy requirements and logging specifications.
+3.  **Design:** Detailing the Terraform module structure and trust relationship models.
+4.  **Implementation & Development:** Writing and refining the Terraform code and GitHub Actions workflows.
+5.  **Testing & Integration:** Validation of cross-account access and log centralization in the target AWS environment.
+
+## 3. Core Objectives
 
 - **Secure Cross-Account Access:** Implement IAM roles that can only be assumed by trusted entities from a dedicated security account, enforced with Multi-Factor Authentication (MFA) and a unique External ID.
 - **Enforce Least Privilege:** Ensure that assumed roles have the absolute minimum permissions required to perform their tasks (e.g., read-only access to a specific S3 bucket).
