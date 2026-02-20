@@ -1,0 +1,40 @@
+# Terraform artifacts
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+*.tfvars
+.vscode/
+
+# AWS CLI/credentials
+.aws/credentials
+
+# OS generated files
+.DS_Store
+.env
+.idea/
+.project
+.settings/
+.classpath
+*.swp
+*~
+._*
+.history
+
+# Editor specific
+/data/
+/dist/
+/node_modules/
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+.venv/
+env/
+venv/
