@@ -48,7 +48,14 @@ To establish a secure, auditable, and scalable cross-account IAM solution in AWS
 - All infrastructure is managed by Terraform with a clean `terraform plan` and `terraform apply`.
 - All code changes go through a GitHub PR review process with automated checks.
 
-## 9. Development Plan & Timeline
+## 9. Budget & Funding
+- **Budget:** $0.00
+- **Funding Source:** AWS Free Tier usage.
+- **Cost Management:** Strict adherence to Free Tier limits (e.g., S3 storage < 5GB, KMS key usage within limits).
+
+## 10. Development Plan & Timeline
+
+**Time Limit:** 2 Weeks (Target Completion: [2 Weeks from Today])
 
 This project follows a 5-stage development cycle:
 
@@ -69,7 +76,7 @@ This project follows a 5-stage development cycle:
     - Verification of security constraints (MFA, External ID).
     - Validation of centralized log delivery.
 
-## 10. Key Risks (Initial - to be detailed in Risk Register)
+## 11. Key Risks (Initial - to be detailed in Risk Register)
 - Incorrect IAM policies leading to over-privilege.
 - CloudTrail configuration errors causing log loss.
 - Insecure handling of External ID.
