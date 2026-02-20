@@ -48,10 +48,26 @@ To establish a secure, auditable, and scalable cross-account IAM solution in AWS
 - All infrastructure is managed by Terraform with a clean `terraform plan` and `terraform apply`.
 - All code changes go through a GitHub PR review process with automated checks.
 
-## 9. Timeline (Example - to be refined)
-- **Week 1-2:** Project setup, IaC structure, basic IAM roles & S3 buckets.
-- **Week 3-4:** CloudTrail configuration, cross-account trust policies, initial testing.
-- **Week 5-6:** Documentation completion, GitHub Actions setup, comprehensive testing.
+## 9. Development Plan & Timeline
+
+This project follows a 5-stage development cycle:
+
+1.  **Stage 1: Planning (Current Status)**
+    - Project Charter, Risk Register, and Initial Architecture.
+    - Repository structure and CI/CD baseline.
+2.  **Stage 2: Requirements & Analysis**
+    - Defining specific cross-account roles and required permissions.
+    - Analyzing logging requirements and retention policies.
+3.  **Stage 3: Design**
+    - Terraform module design for IAM and Logging.
+    - Defining state management and backend configuration.
+4.  **Stage 4: Implementation & Development**
+    - Coding Terraform modules and environment configurations.
+    - Developing GitHub Actions for automated linting and planning.
+5.  **Stage 5: Testing & Integration**
+    - Deployment to test environment.
+    - Verification of security constraints (MFA, External ID).
+    - Validation of centralized log delivery.
 
 ## 10. Key Risks (Initial - to be detailed in Risk Register)
 - Incorrect IAM policies leading to over-privilege.
