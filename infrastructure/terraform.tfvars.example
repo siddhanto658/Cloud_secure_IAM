@@ -1,0 +1,10 @@
+# This is a template for your local terraform.tfvars
+# Copy this to terraform.tfvars and fill in your actual Account IDs.
+# DO NOT COMMIT terraform.tfvars to GitHub.
+
+security_account_id = "123456789012"
+workload_account_id = "123456789012"
+logging_account_id  = "123456789012"
+
+region              = "us-east-1"
+external_id         = "your-unique-external-id-here"
