@@ -38,22 +38,22 @@ jobs:
     - name: Terraform Format
       id: fmt
       run: terraform fmt -check
-      working-directory: ./cross-account-iam-security/infrastructure/environments/dev # Adjust if you have multiple environments
+      working-directory: ./infrastructure/environments/dev
 
     - name: Terraform Init
       id: init
       run: terraform init -backend=false
-      working-directory: ./cross-account-iam-security/infrastructure/environments/dev
+      working-directory: ./infrastructure/environments/dev
 
     - name: Terraform Validate
       id: validate
       run: terraform validate -no-color
-      working-directory: ./cross-account-iam-security/infrastructure/environments/dev
+      working-directory: ./infrastructure/environments/dev
 
     - name: Terraform Plan
       id: plan
       run: terraform plan -no-color
-      working-directory: ./cross-account-iam-security/infrastructure/environments/dev
+      working-directory: ./infrastructure/environments/dev
       continue-on-error: true # Allow plan to fail but still post comment
 
     - name: Post Terraform Plan as PR Comment
