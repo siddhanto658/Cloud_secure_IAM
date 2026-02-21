@@ -40,6 +40,7 @@ output "cloudtrail_arn" {
 
 output "how_to_assume_roles" {
   description = "Instructions for assuming cross-account roles"
+  sensitive   = true
   value       = <<-EOT
     To assume the cross-account roles from the Security account, use AWS CLI:
 
