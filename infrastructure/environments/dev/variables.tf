@@ -1,5 +1,11 @@
+variable "region" {
+  description = "The AWS region to deploy resources to."
+  type        = string
+  default     = "ap-south-1"
+}
+
 variable "security_account_id" {
-  description = "The AWS Account ID of the Security/Management account."
+  description = "The AWS Account ID of the Security account."
   type        = string
 }
 
@@ -13,14 +19,8 @@ variable "logging_account_id" {
   type        = string
 }
 
-variable "region" {
-  description = "The primary AWS region for resources."
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "external_id" {
-  description = "The unique External ID for cross-account trust."
+  description = "The external ID for cross-account role assumption."
   type        = string
   sensitive   = true
 }
