@@ -1,64 +1,111 @@
-# Project: Cloud_secure_IAM
+# Cloud Secure IAM
 
-## 1. Overview
+A secure, auditable, and scalable cross-account IAM solution in AWS using Terraform.
 
-This repository contains the infrastructure-as-code and documentation for a secure, auditable, and scalable cross-account IAM solution in AWS. The primary goal is to establish a foundational security posture by implementing least-privilege access and centralized logging, all managed via Terraform and version control.
+## Architecture
 
-This project intentionally omits AI/ML components to focus on the critical, underlying security architecture.
+This project implements a 3-account AWS security architecture:
 
-## 2. Project Status & Development Plan
+| Account | Purpose |
+|---------|---------|
+| **Security** | Management account - you run Terraform from here |
+| **Workload** | Your application resources (EC2, RDS, S3, etc.) |
+| **Logging** | Centralized CloudTrail logs in immutable S3 bucket |
 
-**Current Phase:** Initial Project Planning Phase
+### How It Works
 
-This project follows a 5-stage development plan:
-1.  **Planning:** Initial scope definition, architecture design, and repository setup (Current).
-2.  **Requirements & Analysis:** Finalizing IAM policy requirements and logging specifications.
-3.  **Design:** Detailing the Terraform module structure and trust relationship models.
-4.  **Implementation & Development:** Writing and refining the Terraform code and GitHub Actions workflows.
-5.  **Testing & Integration:** Validation of cross-account access and log centralization in the target AWS environment.
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Security   │     │  Workload   │     │  Logging    │
+│  (You)      │     │  Account    │     │  Account    │
+├─────────────┤     ├─────────────┤     ├─────────────┤
+│ Terraform   │────▶│ IAM Role    │     │ S3 Bucket   │
+│             │     │ CloudTrail  │────▶│ (logs)       │
+│ Read-Only   │◀────│ IAM Role    │     │ IAM Role    │
+│ Access      │     │             │     │             │
+└─────────────┘     └─────────────┘     └─────────────┘
+      │
+      │ MFA + External ID
+      ▼
+  You assume cross-account roles
+```
 
-## 3. Core Objectives
+## Features
 
-- **Secure Cross-Account Access:** Implement IAM roles that can only be assumed by trusted entities from a dedicated security account, enforced with Multi-Factor Authentication (MFA) and a unique External ID.
-- **Enforce Least Privilege:** Ensure that assumed roles have the absolute minimum permissions required to perform their tasks (e.g., read-only access to a specific S3 bucket).
-- **Centralize Logging:** Consolidate AWS CloudTrail logs from all accounts into a single, immutable S3 bucket located in a dedicated logging account for simplified auditing and monitoring.
-- **Infrastructure as Code (IaC):** Define 100% of the cloud infrastructure in Terraform to ensure reproducibility, versioning, and peer review.
-- **Automated Validation:** Automatically validate all infrastructure changes via GitHub Actions before they are merged.
+- **Cross-Account IAM Roles** - Secure access with MFA + External ID
+- **Least Privilege** - Read-only access by default
+- **Centralized Logging** - All CloudTrail logs in one immutable S3 bucket
+- **Infrastructure as Code** - 100% Terraform managed
+- **Immutable Bucket** - Denies log deletion
 
-## 3. Getting Started
+## Prerequisites
 
-### Prerequisites
-
-- AWS Account(s)
+- 3 AWS Accounts (Security, Workload, Logging)
+- AWS CLI configured with Security account
 - Terraform CLI
-- AWS CLI
+- MFA enabled on your IAM user
 
-### Deployment
+## Quick Start
 
-1. **Configure AWS Credentials:** Set up your AWS credentials for the deployment.
-2. **Navigate to the environment:**
-   ```sh
-   cd infrastructure/environments/dev
-   ```
-3. **Initialize Terraform:**
-   ```sh
-   terraform init
-   ```
-4. **Review the plan:**
-   ```sh
-   terraform plan
-   ```
-5. **Apply the infrastructure:**
-   ```sh
-   terraform apply
-   ```
+### 1. Configure Variables
 
-## 4. Repository Structure
+```bash
+cd infrastructure/environments/dev
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your account IDs
+```
 
-- `README.md`: This file.
-- `ARCHITECTURE.md`: Detailed explanation of the technical architecture and data flows.
-- `docs/`: Project management artifacts (Charter, Risk Register, etc.).
-- `infrastructure/`: All Terraform code.
-  - `modules/`: Reusable Terraform modules for components like IAM roles and S3 buckets.
-  - `environments/`: Configuration for each deployment environment (e.g., `dev`, `prod`).
-- `.github/`: CI/CD workflows and PR templates.
+### 2. Create Bootstrap Role
+
+In Workload and Logging accounts, create a role `cs-admin` with:
+- Trust to Security account (260998120425)
+- AdministratorAccess policy
+
+### 3. Run Terraform
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+### 4. Use Cross-Account Access
+
+```bash
+# Assume role with MFA
+aws sts assume-role \
+  --role-arn "arn:aws:iam::WORKLOAD_ACCOUNT_ID:role/WorkloadReadOnlyRole" \
+  --role-session-name "MySession" \
+  --external-id "your-external-id" \
+  --serial-number "arn:aws:iam::SECURITY_ACCOUNT_ID:mfa/YOUR_USER" \
+  --token-code "123456"
+```
+
+## Repository Structure
+
+```
+Cloud_secure_IAM/
+├── infrastructure/
+│   ├── environments/
+│   │   └── dev/           # Dev environment
+│   │       ├── main.tf
+│   │       ├── variables.tf
+│   │       ├── outputs.tf
+│   │       └── providers.tf
+│   └── modules/
+│       ├── iam-cross-account/    # Cross-account IAM role
+│       ├── iam-policy/           # Read-only IAM policy
+│       ├── s3-logging/           # Centralized logging bucket
+│       └── cloudtrail/           # CloudTrail configuration
+├── docs/                  # Project documentation
+├── .github/              # CI/CD workflows
+└── README.md
+```
+
+## Security
+
+- MFA required for cross-account access
+- External ID prevents "confused deputy" attacks
+- S3 bucket policy denies log deletion
+- No credentials hardcoded - uses IAM roles only
+- `terraform.tfvars` is gitignored - never commit secrets
