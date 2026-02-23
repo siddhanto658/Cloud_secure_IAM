@@ -3,6 +3,8 @@
 A secure, auditable, and scalable cross-account IAM solution in AWS.
 
 > **Note**: This project was implemented using AWS Console (GUI). Terraform configuration is included for automated/accelerated deployment if desired.
+> 
+> **Proof**: See [PROOF.md](PROOF.md) for implementation screenshots and verification.
 
 ## Architecture
 
@@ -140,6 +142,8 @@ Cloud_secure_IAM/
 ---
 
 ## Testing & Verification
+
+> **Proof of Implementation**: See [PROOF.md](PROOF.md) for detailed screenshots and verification.
 
 ### Verified Components
 | Component | Status |
