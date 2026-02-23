@@ -39,9 +39,11 @@ A secure, auditable, and scalable cross-account IAM solution in AWS using Terraf
   - Server-side encryption: AES-256
   - Versioning: Enabled
   - Block public access: Disabled (all unchecked)
-- ✅ Added Bucket Policy (3 statements):
+- ✅ Added Bucket Policy (updated with 5 statements):
   - AllowCloudTrailCheck: s3:GetBucketAcl
   - AllowCloudTrailWrites: s3:PutObject with bucket-owner-full-control condition
+  - AllowListBucket: s3:ListBucket for CloudTrail
+  - AllowSecurityAccountRead: s3:ListBucket + s3:GetObject for Security account
   - DenyLogDeletion: Denies s3:DeleteObject for all principals
 - ✅ Created Cross-Account Role: `LoggingReadOnlyRole`
   - Trust: Security account (260998120425)
@@ -70,11 +72,11 @@ A secure, auditable, and scalable cross-account IAM solution in AWS using Terraf
 
 ---
 
-## Next Steps (To Continue)
-1. Test cross-account access from Security → Workload account
-2. Test cross-account access from Security → Logging account
-3. Verify CloudTrail logs appearing in S3 bucket
-4. Optional: Clean up unused Terraform files in repo
+## Next Steps (Completed)
+1. ✅ Test cross-account access from Security → Workload account - PASSED
+2. ✅ Test cross-account access from Security → Logging account - PASSED
+3. ✅ Verify CloudTrail logs appearing in S3 bucket - VERIFIED
+4. ✅ Optional: Clean up unused Terraform files in repo - Skipped (GUI setup)
 
 ---
 
@@ -101,6 +103,36 @@ aws sts assume-role \
 
 ---
 
+## Testing Results (2026-02-23)
+
+### Cross-Account Access Tests
+- ✅ Security → Workload: Successfully assumed WorkloadReadOnlyRole via Console
+- ✅ Security → Logging: Successfully assumed LoggingReadOnlyRole via Console
+
+### CloudTrail Verification
+- ✅ Logs visible in S3 bucket: cloud-secure-iam-logging-bucket-702175641450
+- ✅ Log path: AWSLogs/009850210909/ (Workload account events)
+
+### Permissions Attached to Roles
+**WorkloadReadOnlyRole:**
+- AmazonS3ReadOnlyAccess
+- IAMReadOnlyAccess
+- AWSCloudTrail_ReadOnlyAccess
+- ReadOnlyAccess1
+
+**LoggingReadOnlyRole:**
+- AmazonS3ReadOnlyAccess
+- IAMReadOnlyAccess
+- ReadOnlyAccess
+
+### CloudTrail Final Status
+- Trail Name: `management-trail`
+- Status: Active & Logging
+- Multi-region: Yes
+- Logs Location: `s3://cloud-secure-iam-logging-bucket-702175641450/AWSLogs/009850210909/`
+
+---
+
 ## Notes
 - MFA must be enabled on the IAM user in Security account
 - External ID prevents "confused deputy" attacks
@@ -108,4 +140,4 @@ aws sts assume-role \
 
 ---
 
-*Last Updated: 2026-02-21*
+*Last Updated: 2026-02-23*

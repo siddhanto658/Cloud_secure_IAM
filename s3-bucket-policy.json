@@ -1,0 +1,59 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowCloudTrailCheck",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+      },
+      "Action": "s3:GetBucketAcl",
+      "Resource": "arn:aws:s3:::cloud-secure-iam-logging-bucket-702175641450"
+    },
+    {
+      "Sid": "AllowCloudTrailWrites",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::cloud-secure-iam-logging-bucket-702175641450/AWSLogs/*",
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-acl": "bucket-owner-full-control"
+        }
+      }
+    },
+    {
+      "Sid": "AllowListBucket",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudtrail.amazonaws.com"
+      },
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::cloud-secure-iam-logging-bucket-702175641450"
+    },
+    {
+      "Sid": "AllowSecurityAccountRead",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::260998120425:root"
+      },
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::cloud-secure-iam-logging-bucket-702175641450",
+        "arn:aws:s3:::cloud-secure-iam-logging-bucket-702175641450/*"
+      ]
+    },
+    {
+      "Sid": "DenyLogDeletion",
+      "Effect": "Deny",
+      "Principal": "*",
+      "Action": "s3:DeleteObject",
+      "Resource": "arn:aws:s3:::cloud-secure-iam-logging-bucket-702175641450/*"
+    }
+  ]
+}
